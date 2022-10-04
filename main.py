@@ -3,7 +3,7 @@ from ortools.sat.python import cp_model
 '''
 setting up the date for the problem. Different problem, different data. 
 '''
-nurse_num = 4
+nurse_num = 10
 shift_num = 3
 days_num = 3
 
@@ -33,7 +33,7 @@ for n in all_nurses :
 
 for d in all_days :
     for s in all_shifts : 
-        model.AddExactlyOne(shifts[(n,d,s)] for n in all_nurses) 
+        model.AddExactlyOne(shifts[(n,d,s)] for n in all_nurses)
 
 #constraint: at most one shift per nurse per day 
 
