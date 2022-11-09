@@ -5,7 +5,8 @@ setting up the date for the problem. Different problem, different data.
 '''
 doctor_num = 10
 shift_num = 3
-days_num = 3
+days_num = 30
+doctors_per_shift = 2
 
 # sort of an ID for each one. 
 all_doctors = range(doctor_num) 
@@ -29,11 +30,11 @@ for n in all_doctors :
     now we add constraints
 '''
 
-#constraint: only one doctor per shift everyday
+#constraint: only two doctors per shift everyday
 
 for d in all_days :
     for s in all_shifts : 
-        model.AddExactlyOne(shifts[(n,d,s)] for n in all_doctors)
+        model.Add(sum(shifts[(n,d,s)] for n in all_doctors) == doctors_per_shift)
 
 #constraint: at most one shift per doctor per day 
 
@@ -43,7 +44,7 @@ for n in all_doctors :
 
 #assign shifts evenly. each should have less than maximum and more than minimum, max min values are 
 
-total_shifts = shift_num*days_num
+total_shifts = shift_num*days_num*doctors_per_shift
 minimum_shifts = total_shifts//doctor_num 
 
 if total_shifts%doctor_num == 0 :
@@ -99,7 +100,7 @@ class doctorsPartialSolutionPrinter(cp_model.CpSolverSolutionCallback):
         return self._solution_count
 
 # Display the first five solutions.
-solution_limit = 5
+solution_limit = 1
 solution_printer = doctorsPartialSolutionPrinter(shifts, doctor_num,
                                                 days_num, shift_num,
                                                 solution_limit)
