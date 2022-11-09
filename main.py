@@ -5,7 +5,7 @@ setting up the date for the problem. Different problem, different data.
 '''
 doctor_num = 10
 shift_num = 3
-days_num = 30
+days_num = 10
 doctors_per_shift = 2
 
 # sort of an ID for each one. 
@@ -78,20 +78,30 @@ class doctorsPartialSolutionPrinter(cp_model.CpSolverSolutionCallback):
         self._num_shifts = num_shifts
         self._solution_count = 0
         self._solution_limit = limit
+        self._solution_output = [] 
 
     def on_solution_callback(self):
         self._solution_count += 1
         print('Solution %i' % self._solution_count)
         for d in range(self._num_days):
+            day_dict = {} 
             print('Day %i' % d)
             for n in range(self._num_doctors):
                 is_working = False
                 for s in range(self._num_shifts):
+                    
                     if self.Value(self._shifts[(n, d, s)]):
                         is_working = True
+                        day_dict[s] = day_dict.get(s,[])+[n]
+                        
                         print('  doctor %i works shift %i' % (n, s))
                 if not is_working:
                     print('  doctor {} does not work'.format(n))
+            
+            day_list = [] 
+            for i in all_shifts : 
+                day_list.append(day_dict[i])
+            self._solution_output.append(day_list)
         if self._solution_count >= self._solution_limit:
             print('Stop search after %i solutions' % self._solution_limit)
             self.StopSearch()
@@ -106,3 +116,4 @@ solution_printer = doctorsPartialSolutionPrinter(shifts, doctor_num,
                                                 solution_limit)
 
 solver.Solve(model, solution_printer) 
+print(solution_printer._solution_output)
