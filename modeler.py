@@ -5,8 +5,8 @@ class ParameterHolder :
         self.days = days
         self.shifts = shifts
         self.doctors = doctors 
-        self.shift_capacity = shift_capacity
-        self.shift_limit = shift_limit
+        self.shift_capacity = shift_capacity    # doctors per shift
+        self.shift_limit = shift_limit          # upper limit for shifts per doctors in a month
     
 def create_model (self, parameters:ParameterHolder, model: cp_model.CpModel ) -> cp_model.CpModel: 
 
