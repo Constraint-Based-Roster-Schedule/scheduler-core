@@ -26,9 +26,7 @@ for n in all_doctors :
         for s in all_shifts : 
             shifts[(n,d,s)] = model.NewBoolVar('shift_n%id%is%i' % (n, d, s))
 
-'''
-    now we add constraints
-'''
+### Adding constraints
 
 #constraint: only two doctors per shift everyday
 
