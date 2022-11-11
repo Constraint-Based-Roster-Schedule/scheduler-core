@@ -7,7 +7,11 @@ doctor_num = 10
 shift_num = 3
 days_num = 10
 doctors_per_shift = 2
-
+leave_requests = {
+    (9,3,2) : 1, 
+    (9,3,1) : 1,
+    (9,2,2) : 1
+}
 # sort of an ID for each one. 
 all_doctors = range(doctor_num) 
 all_shifts = range(shift_num) 
@@ -26,13 +30,25 @@ for n in all_doctors :
         for s in all_shifts : 
             shifts[(n,d,s)] = model.NewBoolVar('shift_n%id%is%i' % (n, d, s))
 
-### Adding constraints
+"""
+    Adding constraints 
+"""
 
-#constraint: only two doctors per shift everyday
+#constraint: only the number of doctors specified for a shift
 
 for d in all_days :
     for s in all_shifts : 
         model.Add(sum(shifts[(n,d,s)] for n in all_doctors) == doctors_per_shift)
+
+
+
+#constraint: include leave requests
+
+for n in all_doctors : 
+    for d in all_days :
+        for s in all_shifts : 
+            model.Add(shifts[(n,d,s)] + leave_requests.get((n,d,s),0) <= 1) 
+
 
 #constraint: at most one shift per doctor per day 
 
