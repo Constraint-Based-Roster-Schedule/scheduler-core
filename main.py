@@ -7,11 +7,18 @@ doctor_num = 10
 shift_num = 3
 days_num = 10
 doctors_per_shift = 2
-leave_requests = {
-    (9,3,2) : 1, 
-    (9,3,1) : 1,
-    (9,2,2) : 1
-}
+leave_requests = [
+    (2,2,2), 
+    (0,2,1),
+    (1,2,2)
+]
+
+preference_requests = [
+    (8,2,0), 
+    (7,0,1)
+]   
+
+
 # sort of an ID for each one. 
 all_doctors = range(doctor_num) 
 all_shifts = range(shift_num) 
@@ -20,10 +27,11 @@ all_days = range(days_num)
 #create model 
 model = cp_model.CpModel() 
 
-'''
+"""
     problem: representing a solution 
     solution: solution is a set of tuples where (n,d,s) = 1 if nth doctor is assigned to sth shift on dth day.
-'''
+"""
+
 shifts = {}
 for n in all_doctors :
     for d in all_days :
@@ -40,14 +48,15 @@ for d in all_days :
     for s in all_shifts : 
         model.Add(sum(shifts[(n,d,s)] for n in all_doctors) == doctors_per_shift)
 
+#constraint: include preference requests
 
+for key in preference_requests :
+    model.Add(shifts[key] == 1)
 
 #constraint: include leave requests
 
-for n in all_doctors : 
-    for d in all_days :
-        for s in all_shifts : 
-            model.Add(shifts[(n,d,s)] + leave_requests.get((n,d,s),0) <= 1) 
+for key in leave_requests :
+    model.Add(shifts[key] == 0)
 
 
 #constraint: at most one shift per doctor per day 
