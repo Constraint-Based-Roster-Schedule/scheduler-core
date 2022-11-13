@@ -9,12 +9,12 @@ days_num = 10
 doctors_per_shift = 2
 leave_requests = [
     (2,2,2), 
-    (0,2,1),
+    (8,2,1),
     (1,2,2)
 ]
 
 preference_requests = [
-    (8,2,0), 
+    (8,2,1), 
     (7,0,1)
 ]   
 
@@ -139,4 +139,8 @@ solution_printer = doctorsPartialSolutionPrinter(shifts, doctor_num,
                                                 solution_limit)
 
 solver.Solve(model, solution_printer) 
-print(solution_printer._solution_output)
+
+if solution_printer._solution_output == [] :
+    print("No solutions!")
+else :
+    print(solution_printer._solution_output)
